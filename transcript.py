@@ -55,27 +55,17 @@ def getSummary(transcript_chunks, wordcount):
 
   return summary
 
-transcriptText = getTranscriptText(transcriptjson)
-
 # keep on passing through ai until reaches specified wordcount
-# every word has ~6.5 characters on average
-while len(transcriptText)>wordcount*6.5:
-    transcript_chunks = chunk_transcript(transcriptText)  
-    transcriptText = getSummary(transcript_chunks, wordcount)
+def getFinalsummary():
+  transcriptText = getTranscriptText(transcriptjson)
 
-# output to user interface
-print(transcriptText)
+  # every word has ~6.5 characters on average
+  while len(transcriptText)>wordcount*6.5:
+      transcript_chunks = chunk_transcript(transcriptText)  
+      transcriptText = getSummary(transcript_chunks, wordcount)
 
-"""response = client.chat.completions.create(
-  model="gpt-3.5-turbo",
-  messages=[
-    {"role": "system", "content": "You are a helpful assistant."},
-    {"role": "assistant", "content": "Write a 100 word summary of this video."},
-    {"role": "user", "content": getTranscriptText(transcriptjson)}
-  ]
-)
+  # output to user interface
+  print(transcriptText)
 
-summary = response.choices[0].message.content
-
-print(summary)
-"""
+#pprint.pprint(transcriptjson)
+print(YouTubeTranscriptApi.list_transcripts(video_id))
