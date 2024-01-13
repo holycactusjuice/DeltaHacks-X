@@ -4,68 +4,91 @@ from youtube_transcript_api import YouTubeTranscriptApi
 from openai import OpenAI
 
 client = OpenAI(
-  api_key="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"
-)
+    api_key="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"
+  )
 
-# test parameters (replace with user input later)
-url = 'https://www.youtube.com/watch?v=NJZ5YNrXMpE&ab_channel=oliSUNvia'
-#url = 'https://www.youtube.com/watch?v=h6fcK_fRYaI&ab_channel=Kurzgesagt%E2%80%93InaNutshell'
-wordcount = 100
+class Summarizer:
+  # test parameters (replace with user input later)
+  url = 'https://www.youtube.com/watch?v=NJZ5YNrXMpE&ab_channel=oliSUNvia'
+  #url = 'https://www.youtube.com/watch?v=h6fcK_fRYaI&ab_channel=Kurzgesagt%E2%80%93InaNutshell'
+  wordCount = 100
+  startTime = 0
+  endTime = 0
 
-video_id = url.replace('https://www.youtube.com/watch?v=', '')
-transcriptjson = YouTubeTranscriptApi.get_transcript(video_id, languages=['en', "en-GB"])
 
+  # split transcript up into 10000-character chunks
+  def chunk_transcript(transcript, chunk_size=10000):
+      chunks = [transcript[i:i+chunk_size] for i in range(0, len(transcript), chunk_size)]
+      return chunks
 
-# split transcript up into 10000-character chunks
-def chunk_transcript(transcript, chunk_size=10000):
-    chunks = [transcript[i:i+chunk_size] for i in range(0, len(transcript), chunk_size)]
-    return chunks
+  #debug: pprint.pprint(transcriptjson)
 
-#debug: pprint.pprint(transcriptjson)
+  # get transcript from youtube
+  def getTranscriptText(transcriptjson, startTime, endTime):
+    transcript=''
 
-# get transcript from youtube
-def getTranscriptText(transcriptjson):
-  transcript=''
-  for item in transcriptjson:
-      clip = item['text']
-      transcript += f' {clip}' 
+    result = []
 
-  return transcript
+    for item in transcriptjson:
+       if int(item['start']) in range(startTime, endTime):
+          result.append(item)
 
-# get summary of transcript using openai (wordcount specified by user)
-def getSummary(transcript_chunks, wordcount):
-  summary = ""
+    for item in result:
+        clip = item['text']
+        transcript += f' {clip}' 
 
-  # commands for openai
-  conversation=[
-      {"role": "system", "content": "You are a helpful assistant."},
-      {"role": "assistant", "content": f"Write a {wordcount} word summary of this video."}]
+    return transcript
+
+  # get summary of transcript using openai (wordcount specified by user)
+  @staticmethod
+  def getSummary(transcript_chunks, wordCount):
+    summary = ""
+
+    # commands for openai
+    conversation=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "assistant", "content": f"Write a {wordCount} word summary of this video."}]
+    
+    # run it on every chunk of transcript
+    for chunk in transcript_chunks:
+        conversation.append({"role": "user", "content": chunk})
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=conversation
+        )
+        summary += f" {response.choices[0].message.content}"
+
+        # Clear user input for the next chunk
+        conversation = conversation[:-1]
+
+    return summary
   
-  # run it on every chunk of transcript
-  for chunk in transcript_chunks:
-      conversation.append({"role": "user", "content": chunk})
-      response = client.chat.completions.create(
-          model="gpt-3.5-turbo",
-          messages=conversation
-      )
-      summary += f" {response.choices[0].message.content}"
+  @staticmethod
+  def getEndtime(transcriptjson):
+     return transcriptjson[-1]['start']
 
-      # Clear user input for the next chunk
-      conversation = conversation[:-1]
+  # keep on passing through ai until reaches specified wordcount
+  @staticmethod
+  def getFinalsummary(url, wordCount, startTime=0, endTime=None):
 
-  return summary
+    video_id = url.replace('https://www.youtube.com/watch?v=', '')
+    transcriptjson = YouTubeTranscriptApi.get_transcript(video_id, languages=['en', "en-GB"])
 
-# keep on passing through ai until reaches specified wordcount
-def getFinalsummary():
-  transcriptText = getTranscriptText(transcriptjson)
+    if endTime == None:
+      Summarizer.getEndtime(transcriptjson)
 
-  # every word has ~6.5 characters on average
-  while len(transcriptText)>wordcount*6.5:
-      transcript_chunks = chunk_transcript(transcriptText)  
-      transcriptText = getSummary(transcript_chunks, wordcount)
+    transcriptText = Summarizer.getTranscriptText(transcriptjson, startTime, endTime)
 
-  # output to user interface
-  print(transcriptText)
+    # every word has ~6.5 characters on average
+    while len(transcriptText)>wordCount*6.5:
+        transcript_chunks = Summarizer.chunk_transcript(transcriptText)  
+        transcriptText = Summarizer.getSummary(transcript_chunks, wordCount)
 
-#pprint.pprint(transcriptjson)
-print(YouTubeTranscriptApi.list_transcripts(video_id))
+    # output to user interface
+    print(transcriptText)
+
+    #pprint.pprint(transcriptjson)
+    #print(YouTubeTranscriptApi.list_transcripts(video_id))
+
+#print(len(YouTubeTranscriptApi.get_transcript("NJZ5YNrXMpE&ab_channel=oliSUNvia", languages=['en', "en-GB"])))
+#print(Summarizer.getFinalsummary('https://www.youtube.com/watch?v=NJZ5YNrXMpE&ab_channel=oliSUNvia', 100, 1700, 3000))
