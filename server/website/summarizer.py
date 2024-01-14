@@ -41,13 +41,13 @@ class Summarizer:
 
     # get summary of transcript using openai (wordcount specified by user)
     @staticmethod
-    def getSummary(transcript_chunks, wordCount):
+    def getSummary(transcript_chunks, wordCount, summary_type):
         summary = ""
 
         # commands for openai
         conversation = [
             {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "assistant", "content": f"Write a {wordCount} word summary of this video."}]
+            {"role": "assistant", "content": f"Write a {wordCount} word {summary_type} summary of this video."}]
 
         # run it on every chunk of transcript
         for chunk in transcript_chunks:
@@ -69,7 +69,7 @@ class Summarizer:
 
     # keep on passing through ai until reaches specified wordcount
     @staticmethod
-    def getFinalsummary(url, wordCount, startTime=0, endTime=None):
+    def getFinalsummary(url, wordCount, startTime=0, endTime=None, summary_type="paragraph"):
 
         video_id = url.replace('https://www.youtube.com/watch?v=', '')
         transcriptjson = YouTubeTranscriptApi.get_transcript(
@@ -85,7 +85,7 @@ class Summarizer:
         while len(transcriptText) > wordCount*6.5:
             transcript_chunks = Summarizer.chunk_transcript(transcriptText)
             transcriptText = Summarizer.getSummary(
-                transcript_chunks, wordCount)
+                transcript_chunks, wordCount, summary_type)
 
         # output to user interface
         return transcriptText

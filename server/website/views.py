@@ -14,12 +14,19 @@ def get_summary():
     start_time = Summarizer.timestamp_to_seconds(str(data.get('startTime')))
     end_time = Summarizer.timestamp_to_seconds(str(data.get('endTime')))
     word_count = int(data.get('wordCount'))
+    summary_type = data.get('summaryType')
 
-    summary = Summarizer.getFinalsummary(url, word_count, start_time, end_time)
+    summary = Summarizer.getFinalsummary(
+        url, word_count, start_time, end_time, summary_type)
 
     title = Summarizer.get_video_title(url)
 
     if not url:
         return jsonify({"error": "No URL provided"})
 
-    return jsonify({"title": title, "url": url, "text": summary})
+    if summary_type == "point-form":
+        summary = summary[2:].split("\n- ")
+    # else:
+    #     summary = summary.split("\n")
+
+    return jsonify({"title": title, "url": url, "text": summary, "type": summary_type})

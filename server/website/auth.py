@@ -43,7 +43,7 @@ def sign_up():
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
 
-        existing_user = user.find_one({'username': 'happyman'})
+        existing_user = user.find_one({'username': username})
         existing_email = user.find_one({'email': email})
 
         if len(email) < 4:
