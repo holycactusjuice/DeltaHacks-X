@@ -10,6 +10,18 @@ user = db.appname
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password1 = request.form.get('password1')
+
+        existing_user = user.find_one({'username': username})
+        existing_password = user.find_one({'password': password1})
+
+        if existing_user and existing_password and existing_user['username'] == username and existing_password['password'] == password1:
+            return render_template('signedin.html')
+        else:
+            flash("Incorrect login information. Try again.")
+
     return render_template('login.html')
 
 @auth.route('/logout')
@@ -46,6 +58,7 @@ def sign_up():
             new_email = user_data["email"]
 
             flash('Account created!', category='success')
+            return render_template('signedin.html')
 
     return render_template('signup.html')
 
