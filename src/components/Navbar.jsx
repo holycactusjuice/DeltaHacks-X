@@ -28,7 +28,7 @@ const Navbar = ({ isLoggedIn }) => {
                         className="w-9 h-9 object-contain"
                     />
                     <p className="text-black text-[18px] font-bold cursor-pointer flex ">
-                        TITLE
+                        YouWriter
                     </p>
                 </Link>
 
@@ -56,7 +56,7 @@ const Navbar = ({ isLoggedIn }) => {
                         </>
                     ) : (
                         <>
-                            <li
+                            {/* <li
                                 key={"about"}
                                 className={`text-gray-500 hover:text-black text-[18px] font-medium cursor-pointer`}
                             >
@@ -69,7 +69,7 @@ const Navbar = ({ isLoggedIn }) => {
                                 }
                             >
                                 <a href="http://localhost:5000/login">login</a>
-                            </li>
+                            </li> */}
                         </>
                     )}
                 </ul>

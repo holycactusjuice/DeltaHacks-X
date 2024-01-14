@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash, redirect
+from flask import Blueprint, render_template, request, flash, redirect, url_for
 import pymongo
 import certifi
 
@@ -7,13 +7,12 @@ from . import user
 auth = Blueprint('auth', __name__)
 
 
-@auth.route('/')
-def index():
-    print("jsdiajfpowafoheauwhfaowei\n\n\n\n\n\n\n")
-    return render_template('login.html')
+# @auth.route('/', methods=['GET', 'POST'])
+# def index():
+#     return render_template('login.html')
 
 
-@auth.route('/login', methods=['GET', 'POST'])
+@auth.route('/', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form.get('username')
@@ -23,7 +22,6 @@ def login():
         existing_password = user.find_one({'password': password1})
 
         if existing_user and existing_password and existing_user['username'] == username and existing_password['password'] == password1:
-            # return render_template('signedin.html')
             return redirect("http://localhost:3000")
         else:
             flash("Incorrect login information. Try again.")
@@ -68,7 +66,6 @@ def sign_up():
             new_email = user_data["email"]
 
             flash('Account created!', category='success')
-            return redirect("http://localhost:3000")
-            return render_template('signedin.html')
+            return redirect(url_for('auth.login'))
 
     return render_template('signup.html')

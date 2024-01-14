@@ -51,7 +51,7 @@ const Summarize = () => {
     return (
         <div class="min-h-screen">
             <div className="pt-[15vh] p-4 w-[55vw] mx-auto">
-                <h2 class={`text-[40px] font-light text-center mt-10 mb-5`}>
+                <h2 class={`text-[40px] font-semibold text-center mt-10 mb-5`}>
                     Create a video summary in one click
                 </h2>
                 <form
