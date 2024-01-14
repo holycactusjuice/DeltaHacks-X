@@ -7,7 +7,7 @@ from openai import OpenAI
 import certifi
 
 openAI_client = OpenAI(
-    api_key="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"
+    api_key="poop"
 )
 
 client = MongoClient(
