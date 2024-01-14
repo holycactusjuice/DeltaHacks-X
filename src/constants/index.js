@@ -16,3 +16,18 @@ export const navLinks = [
         title: "about",
     },
 ];
+
+export const summaryTypes = [
+    {
+        value: "paragraph",
+        label: "Paragraph",
+    },
+    {
+        value: "point-form",
+        label: "Point-Form",
+    },
+    {
+        value: "essay",
+        label: "Essay",
+    },
+];

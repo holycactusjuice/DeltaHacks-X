@@ -1,7 +1,8 @@
 import Navbar from "./Navbar";
 import About from "./About";
 import Notes from "./Notes";
-import NewNote from "./NewNote";
+import Summarize from "./Summarize";
 import Home from "./Home";
+import Summary from "./Summary";
 
-export { About, Home, Navbar, Notes, NewNote };
+export { About, Home, Navbar, Notes, Summarize, Summary };

@@ -11,7 +11,7 @@ const Navbar = ({ isLoggedIn }) => {
 
     return (
         <nav
-            className={`${styles.paddingX} w-full flex items-center py-5 fixed top-0 z-20 bg-primary`}
+            className={`${styles.paddingX} w-full flex items-center py-5 fixed top-0 z-20 bg-transparent`}
         >
             <div className="w-full flex justify-between items-center max-w-7xl mx-auto">
                 <Link
@@ -27,7 +27,7 @@ const Navbar = ({ isLoggedIn }) => {
                         alt="logo"
                         className="w-9 h-9 object-contain"
                     />
-                    <p className="text-white text-[18px] font-bold cursor-pointer flex ">
+                    <p className="text-black text-[18px] font-bold cursor-pointer flex ">
                         TITLE
                     </p>
                 </Link>
@@ -38,7 +38,7 @@ const Navbar = ({ isLoggedIn }) => {
                             {navLinks.map((nav) => (
                                 <li
                                     key={nav.id}
-                                    className={`text-secondary hover:text-white text-[18px] font-medium cursor-pointer`}
+                                    className={`text-secondary hover:text-black text-[18px] font-medium cursor-pointer`}
                                 >
                                     <a href={`#${nav.id}`}>{nav.title}</a>
                                 </li>
@@ -46,7 +46,7 @@ const Navbar = ({ isLoggedIn }) => {
                             <li
                                 key={"logout"}
                                 className={
-                                    "text-secondary hover:text-white text-[18px] font-medium cursor-pointer"
+                                    "text-secondary hover:text-black text-[18px] font-medium cursor-pointer"
                                 }
                             >
                                 <a href="http://localhost:5000/logout">
@@ -58,14 +58,14 @@ const Navbar = ({ isLoggedIn }) => {
                         <>
                             <li
                                 key={"about"}
-                                className={`text-secondary hover:text-white text-[18px] font-medium cursor-pointer`}
+                                className={`text-secondary hover:text-black text-[18px] font-medium cursor-pointer`}
                             >
                                 <a href="#about">about</a>
                             </li>
                             <li
                                 key={"login"}
                                 className={
-                                    "text-secondary hover:text-white text-[18px] font-medium cursor-pointer"
+                                    "text-secondary hover:text-black text-[18px] font-medium cursor-pointer"
                                 }
                             >
                                 <a href="http://localhost:5000/login">login</a>

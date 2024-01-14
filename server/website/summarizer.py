@@ -1,7 +1,7 @@
-import pprint
 import os
 from youtube_transcript_api import YouTubeTranscriptApi
 from openai import OpenAI
+from pytube import YouTube
 
 from . import openAI_client
 
@@ -21,9 +21,8 @@ class Summarizer:
                   for i in range(0, len(transcript), chunk_size)]
         return chunks
 
-    # debug: pprint.pprint(transcriptjson)
-
     # get transcript from youtube
+
     @staticmethod
     def getTranscriptText(transcriptjson, startTime, endTime):
         transcript = ''
@@ -96,12 +95,30 @@ class Summarizer:
 
     @staticmethod
     def timestamp_to_seconds(timestamp):
-        timestamp = timestamp.split(':')
+        timestamp = [int(x) for x in timestamp.split(':')]
         timestamp.reverse()
 
-        seconds = [int(timestamp[i]) * 60**i for i in range(len(timestamp))]
+        seconds = sum([timestamp[i] * 60**i for i in range(len(timestamp))])
 
         return seconds
+
+    @staticmethod
+    def generate_pointform(input_text):
+        conversation = f"Make point form notes of following text:\n{input_text}\nSummary:"
+        response = openAI_client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=conversation
+        )
+        summary = response['choices'][0]['text'].strip()
+        return summary
+
+    @staticmethod
+    def get_video_title(url):
+        try:
+            video = YouTube(url)
+            return video.title
+        except Exception as e:
+            return f"An error occurred: {e}"
 
 # print(len(YouTubeTranscriptApi.get_transcript("NJZ5YNrXMpE&ab_channel=oliSUNvia", languages=['en', "en-GB"])))
 # print(Summarizer.getFinalsummary('https://www.youtube.com/watch?v=NJZ5YNrXMpE&ab_channel=oliSUNvia', 100, 1700, 3000))

@@ -1,16 +1,20 @@
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
 
-import { About, Home, Navbar, NewNote, Notes } from "./components";
+import { About, Home, Navbar, Notes, Summarize, Summary } from "./components";
+import { SummaryProvider } from "./contexts/SummaryContext";
 
 const App = () => {
     return (
         <BrowserRouter>
-            <div className="relative z-0 bg-primary">
-                <Home />
+            <div className="relative z-0 bg-white">
+                {/* <Home /> */}
                 <Navbar />
-                <NewNote />
-                <About />
+                <SummaryProvider>
+                    <Summarize />
+                    <Summary />
+                </SummaryProvider>
+                {/* <About /> */}
             </div>
         </BrowserRouter>
     );
