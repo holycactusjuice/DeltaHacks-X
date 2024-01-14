@@ -5,7 +5,12 @@ from flask_pymongo import PyMongo
 from flask_cors import CORS
 import os
 from dotenv import load_dotenv
+import os
+from openai import OpenAI
 
+openAI_client = OpenAI(
+    api_key="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"
+)
 load_dotenv()
 
 CLIENT_ID = os.getenv('CLIENT_ID')
@@ -17,22 +22,10 @@ MONGODB_PASSWORD = os.getenv('MONGODB_PASSWORD')
 DB_NAME = os.getenv('DB_NAME')
 
 
-client = MongoClient(
-    f'mongodb+srv://{MONGODB_USERNAME}:{MONGODB_PASSWORD}@cluster0.iruvwvi.mongodb.net/{DB_NAME}?retryWrites=true&w=majority')
-db = client[DB_NAME]
-users = db['users']
-tracks = db['tracks']
-
-
 def create_app():
     app = Flask(__name__)
 
     app.config['SECRET_KEY'] = os.urandom(32)
-
-    app.config['MONGO_URI'] = f'mongodb+srv://{MONGODB_USERNAME}:{MONGODB_PASSWORD}@cluster0.iruvwvi.mongodb.net/{DB_NAME}?retryWrites=true&w=majority'
-
-    mongo = PyMongo()
-    mongo.init_app(app)
 
     # configure CORS to allow requests from frontend
     # allow cookies so that session can be used
@@ -40,19 +33,8 @@ def create_app():
          r"/api/*": {"origins": "http://localhost:3000"}}, supports_credentials=True)
 
     from .views import views
-    from .auth import auth
+    # from .auth import auth
 
     app.register_blueprint(views, url_prefix='/')
-    app.register_blueprint(auth, url_prefix='/')
-
-    login_manager = LoginManager()
-    login_manager.init_app(app)
-    login_manager.login_view = 'auth.login'
-
-    from .models import User
-
-    @login_manager.user_loader
-    def load_user(user_id):
-        return User.get(user_id)
 
     return app

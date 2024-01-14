@@ -1,13 +1,15 @@
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
 
-import { About, Navbar, NewNote, Notes } from "./components";
+import { About, Home, Navbar, NewNote, Notes } from "./components";
 
 const App = () => {
     return (
         <BrowserRouter>
             <div className="relative z-0 bg-primary">
+                <Home />
                 <Navbar />
+                <NewNote />
                 <About />
             </div>
         </BrowserRouter>
