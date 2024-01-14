@@ -41,11 +41,11 @@ def sign_up():
         existing_email = user.find_one({'email': email})
 
         if len(email) < 4:
-            flash('Email must be greater than 4 characters', category='error') #flash shows a message on the screen
+            flash('Email must be greater than 4 characters') #flash shows a message on the screen
         elif password1 != password2:
-            flash('Passwords don\'t match', category='error')
+            flash('Passwords don\'t match')
         elif len(password1) < 7:
-            flash('Password must be at least 7 characters', category='error')
+            flash('Password must be at least 7 characters')
         elif existing_user and username == existing_user['username']:
             flash('That username already exists. Please choose another one')
         elif existing_email and email == existing_email['email']:
