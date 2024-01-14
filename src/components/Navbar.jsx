@@ -38,7 +38,7 @@ const Navbar = ({ isLoggedIn }) => {
                             {navLinks.map((nav) => (
                                 <li
                                     key={nav.id}
-                                    className={`text-secondary hover:text-black text-[18px] font-medium cursor-pointer`}
+                                    className={`text-gray-500 hover:text-black text-[18px] font-medium cursor-pointer`}
                                 >
                                     <a href={`#${nav.id}`}>{nav.title}</a>
                                 </li>
@@ -46,7 +46,7 @@ const Navbar = ({ isLoggedIn }) => {
                             <li
                                 key={"logout"}
                                 className={
-                                    "text-secondary hover:text-black text-[18px] font-medium cursor-pointer"
+                                    "text-gray-500 hover:text-black text-[18px] font-medium cursor-pointer"
                                 }
                             >
                                 <a href="http://localhost:5000/logout">
@@ -58,14 +58,14 @@ const Navbar = ({ isLoggedIn }) => {
                         <>
                             <li
                                 key={"about"}
-                                className={`text-secondary hover:text-black text-[18px] font-medium cursor-pointer`}
+                                className={`text-gray-500 hover:text-black text-[18px] font-medium cursor-pointer`}
                             >
                                 <a href="#about">about</a>
                             </li>
                             <li
                                 key={"login"}
                                 className={
-                                    "text-secondary hover:text-black text-[18px] font-medium cursor-pointer"
+                                    "text-gray-500 hover:text-black text-[18px] font-medium cursor-pointer"
                                 }
                             >
                                 <a href="http://localhost:5000/login">login</a>
@@ -93,7 +93,7 @@ const Navbar = ({ isLoggedIn }) => {
                                     className={`font-poppins font-medium cursor-pointer text-[16px] ${
                                         active === nav.title
                                             ? "text-white"
-                                            : "text-secondary"
+                                            : "text-gray-500"
                                     }`}
                                     onClick={() => {
                                         setToggle(!toggle);

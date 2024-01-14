@@ -1,13 +1,16 @@
-from flask import Blueprint, render_template, request, flash
+from flask import Blueprint, render_template, request, flash, redirect
 import pymongo
-import bcrypt
 import certifi
 
+from . import user
+
 auth = Blueprint('auth', __name__)
-client = pymongo.MongoClient(
-    "mongodb+srv://yiyanhh:kcyDdQBUnW9Ak6DB@cluster0.hdoctva.mongodb.net/", tlsCAFile=certifi.where())
-db = client.get_database("users")
-user = db.appname
+
+
+@auth.route('/')
+def index():
+    print("jsdiajfpowafoheauwhfaowei\n\n\n\n\n\n\n")
+    return render_template('login.html')
 
 
 @auth.route('/login', methods=['GET', 'POST'])
@@ -20,7 +23,8 @@ def login():
         existing_password = user.find_one({'password': password1})
 
         if existing_user and existing_password and existing_user['username'] == username and existing_password['password'] == password1:
-            return render_template('signedin.html')
+            # return render_template('signedin.html')
+            return redirect("http://localhost:3000")
         else:
             flash("Incorrect login information. Try again.")
 
@@ -64,6 +68,7 @@ def sign_up():
             new_email = user_data["email"]
 
             flash('Account created!', category='success')
+            return redirect("http://localhost:3000")
             return render_template('signedin.html')
 
     return render_template('signup.html')
